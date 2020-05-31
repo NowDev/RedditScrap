@@ -44,7 +44,7 @@ def baixar():
         s = s.replace("</h3>","")
         titles.append(s)
 
-    link = random.randint(1,len(links)-1)
+    link = random.randint(1,len(links))
 
     filename = formatar(str(titles[link+1].lower()))
 
