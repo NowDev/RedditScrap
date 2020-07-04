@@ -19,7 +19,7 @@ def formatar(filename):
             filename = filename.replace(caractere,"")
     return filename
 
-def baixar():
+def download():
 
     #Arrays of post links and titles
     links = []
@@ -44,11 +44,17 @@ def baixar():
         s = s.replace("</h3>","")
         titles.append(s)
 
+    print("[+] Found " + str(len(links)) + " link(s).")
+
+    # if our request don't find links...
+    if(len(links)<1):
+        print("[!] Error downloading from r/"+sub+", does this sub exists?")
+        exit()
     link = random.randint(1,len(links))
-
     filename = formatar(str(titles[link+1].lower()))
-
-    response = requests.get(str(links[link]))
+    
+    # added -1 when getting arrays because *i* forgot that arrays start on 0 and not on 1, lol
+    response = requests.get(str(links[link-1]))
     if response.status_code == 200:
         if path.exists(os.getcwd()+"/"+filename+".jpg"):
             print("[!] Existent file, trying again...\n")
@@ -56,11 +62,11 @@ def baixar():
             del titles
             response.close()
             session.close()
-            baixar()
+            download()
             return
         else:    
             with open(os.getcwd()+"/"+filename+".jpg", 'wb') as f:
                 f.write(response.content)
-                print("[+] downloaded (" + os.getcwd()+"/"+filename+".jpg)\n[>] Link: " + str(links[link]) + "\n[>] Title: " + str(titles[link+1]))
+                print("[+] downloaded (" + os.getcwd()+"/"+filename+".jpg)\n[>] Link: " + str(links[link]) + "\n[>] Title: " + str(titles[link+1])+"\n")
 
-baixar()
+download()
